@@ -15,20 +15,11 @@ const Osa = ({ osa }) => {
 }
 
 const Sisalto = ({ osat }) => {
-    return (
-        <div>
-            <Osa osa={osat[0]} />
-            <Osa osa={osat[1]} />
-            <Osa osa={osat[2]} />
-        </div>
-    )
+    return osat.map(osa => <Osa key={osa.nimi} osa={osa} />)
 }
 
 const Yhteensa = ({ osat }) => {
-    let yht = 0
-    osat.map(osa => {
-        return yht += osa.tehtavia
-    })
+    const yht = osat.map(t => t.tehtavia).reduce((acc, cur) => acc + cur)
 
     return (
         <div>
@@ -37,20 +28,46 @@ const Yhteensa = ({ osat }) => {
     )
 }
 
+const Kurssi = ({ kurssi }) => {
+    const kurssit = kurssi.map(k => {
+        return (
+            <div key={k.nimi}>
+                <Otsikko kurssi={k.nimi} />
+                <Sisalto osat={k.osat} /><br/>
+                <Yhteensa osat={k.osat} />
+            </div>
+        )
+    })
+
+    return kurssit
+}
+
 const App = () => {
-    const kurssi = {
-        otsikko: 'Half Stack -sovelluskehitys',
-        osat: [{ nimi: 'Reactin perusteet', tehtavia: 10 },
-        { nimi: 'Tiedonvälitys propseilla', tehtavia: 7 },
-        { nimi: 'Komponenttien tila', tehtavia: 14 }
-        ]
-    }
+    const kurssi = [
+        {
+            nimi: 'Half Stack -sovelluskehitys',
+            id: 1,
+            osat: [
+                { nimi: 'Reactin perusteet', tehtavia: 10, id: 1 },
+                { nimi: 'Tiedonvälitys propseilla', tehtavia: 7, id: 2 },
+                { nimi: 'Komponenttien tila', tehtavia: 14, id: 3 },
+                { nimi: ' Redux', tehtavia: 7, id: 4 }
+            ]
+        },
+        {
+            nimi: 'Node.js',
+            id: 2,
+            osat: [
+                { nimi: 'Routing', tehtavia: 3, id: 1 },
+                { nimi: 'Middlewaret', tehtavia: 7, id: 2 }
+            ]
+        }
+    ]
 
     return (
         <div>
-            <Otsikko kurssi={kurssi.otsikko} />
-            <Sisalto osat={kurssi.osat} /> <br/>
-            <Yhteensa osat={kurssi.osat} />
+            <h1>Opetusohjelma</h1>
+            <Kurssi kurssi={kurssi} />
         </div>
     )
 }
